@@ -1,0 +1,71 @@
+##############################
+README -- Python Email Script
+##############################
+
+##############################
+Initial Specification
+##############################
+	The actual use of the script varies somewhat from the intitial specification.  Refer to the Setup and Use sections for the script's actual use.  The intitial specification was provided in an email to me:
+	
+	How about this: write a Python script which would send an email with selected files as attachments.
+ 
+	Specifically, send using a configurable email account and password.
+ 
+	Send TO a specific list of 1 or more email addresses.
+ 
+	Send 0, 1 or more specific files as included in a list.
+ 
+	Send the files contained in 0, 1 or more DIRECTORIES that are passed as variables to the script. Directories can’t be attached to emails so, of course, the script has to be able to extract the files contained in those directories. We don’t need the process to dig deeper than one level into the directory, assume there are NO subdirectories.
+ 
+	Construct the script so it can do all this together in one email.
+ 
+	The email should have a configurable subject (ex: “Files to be sent from ABC Store.”) and a configurable body (ex: “Attached are the requested files.”)
+ 
+	It should be able to be “called” from a command prompt in a manner similar to this:
+ 
+	pythonscript.py   me@homeemail.com   password    office1@abcstore.com, office2@abcstore.com   “Files to be sent from ABC Store.”  “Attached are the requested files.”  file1,file2,file3   dir1,dir2,dir3
+ 
+ 
+	I use spaces to separate variables, there are other ways to accomplish this, I’m sure.
+ 
+	This is just a template, you would to design it to be acceptable for Python and Windows batch processing. You may need some switches in there for Python to recognize the list of files and/or directories.
+ 
+	You could test it using your own email account, if you so desire, just to make sure it works. I just want it configurable so I can test it using accounts I have access to. 
+
+
+##############################
+Setup
+##############################
+	In order for the script, EmailScript.py, to work, you need to have EmailScript.py, EmailScriptUtilities.py, and SMTPConfiguration.py in the same directory.  SMTPConfiguration.py contains the values for SMTP_host, SMTP_port, and SSL.  SMTP_host identifies the SMTP server, SMTP_port identifies the port on the server, and SSL describes whether an SSL connection to the server is required.  These values need to be set to correspond to the setting on your Mail Transfer Agent's SMTP settings.  A few common settings are listed within the source file, and out of the box this script should work with any gmail email address that you are using for the sender.  Look up the SMTP setting for your email account and enter in the corresponding values into SMTPConfiguration.py to get the script to work for your email account.
+
+##############################
+Use
+##############################
+	To run, assuming you have the python interpreter set to your path environmnent variable and are within the directory where EmailScript.py exists, open the command prompt and type:
+	python EmailScript.py author password send_to_list -s Chosen subject -b message in email -f path/to/file(s) -d path/to/directories
+	
+	1. Author (the email account used to send the message), password (the password of author email account), and send_to_list are required.  The rest of the arguments, subject, body, files, and directories, are optional.
+	2. The send_to_list is entered as a white-space delimited list of email addresses.  Don't use commas as delimiters as the program does not yet check for commas.
+	3. For the optional arguments call up the corresponding flag, -s or --subject for subject, -b or --body for body message of the email, -f or --files for the path to files, and --d or --directories for path to directories.  After typing the flag, type the whitespace delimited list corresponding to the argument that you just brought up with the flag; Again, don't use commas to delimit different values in a single argument--use whitespace.
+	4. The body argument can be typed like: -b the message that you want to appear in the body of your email.  Quotations are not required in the command line, but quotation will not break the program.
+	5. The subject argument can be typed like: -s the subject of the email. Quotations are not required in the command line, but quotation will not break the program.
+	6. The files argument is a whitespace delimited list of either relative or absolute paths to a file.  It can be typed like: -f file1.txt folder1\pic.jpg C:\folder2\mydoc.doc.
+	7. The directories argument is a whitespace delimited list of either relative or absolute paths to a directory.  It can be typed like: -d dir3 dir1\dir2 C:\dir4\dir5.
+	
+	8. In summary, a command like the one below as an example should work just fine (provided all the values are valid; otherwise, the command will gracefully error out or the incorrect values will be ignored):
+	
+	python EmailScript.py authoremail@gmail.com password email1@email.com email2@email.com -s subject of the email -b message in the email -f file1.txt folder1\pic.jpg C:\folder2\mydoc.doc -d dir3 dir1\dir2 C:\dir4\dir5
+	
+	9. A command with all, some, or none of the optional arguments will still send an email.
+	10. A command without the required arguments will gracefully error out.
+	11. python EmailScript.py -h or python EmailScript.py --help can be typed in the command prompt for a description of how the command works.
+	
+##############################
+components
+##############################
+
+	EmailScript.py--Contains the input parser for the command prompt and the method used to send an email.
+	EmailScriptUtilites.py--Contains a class that has a couple of utility methods for formatting the input from the command prompt into the proper format.
+	SMTPConfiguration.py--Contains the values for the author email account's SMTP settings. 
+	
+	
